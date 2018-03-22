@@ -1,27 +1,35 @@
+import java.util.List;
+
 public class AdjacencyMatrix {
     private int n;
     private int[][] matrix;
-    private int l; // String length
 
     public void test(){
         Node node1 = new Node("DFABCABC");
         Node node2 = new Node("ABCABCZZ");
-        l = node1.getNucleortide().length();
-        System.out.println(getWieght(node1, node2));
+
+        //System.out.println(getWieght(node1, node2));
+        //readInputFromFile("neg0.txt");
     }
 
-    private int getWieght(Node from, Node to){
-        int i = 1;
-        int maxCommonSubstringLength = 0;
-        while(i < l){
-            String subFromEnd = from.getNucleortide().substring(l-i, l);
-            String subToBegin = to.getNucleortide().substring(0, i);
-            if(subFromEnd.equals(subToBegin)){
-                maxCommonSubstringLength = i;
-            }
-            i++;
-        }
-        return maxCommonSubstringLength;
+    public AdjacencyMatrix(int n, int[][] matrix) {
+        this.n = n;
+        this.matrix = matrix;
     }
 
+    public int getN() {
+        return n;
+    }
+
+    public void setN(int n) {
+        this.n = n;
+    }
+
+    public int[][] getMatrix() {
+        return matrix;
+    }
+
+    public void setMatrix(int[][] matrix) {
+        this.matrix = matrix;
+    }
 }
