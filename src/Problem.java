@@ -71,7 +71,7 @@ public abstract class Problem {
         indexesOfNodes.add(maxIndexJ);
         visited[maxIndexI] = true;
         visited[maxIndexJ] = true;
-        int lengthOfSequence = nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ];
+        int lengthOfSequence = nucleotideLength + adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ];
         int currentNodeIndex = maxIndexJ;
         while(lengthOfSequence < maxLengthOfSequence){
             // find max from current Node
