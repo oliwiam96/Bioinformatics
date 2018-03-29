@@ -65,6 +65,12 @@ public abstract class Problem {
                     maxIndexI = i;
                     maxIndexJ = j;
                 }
+                else if(adjacencyMatrix.getMatrix()[i][j] == adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ]){
+                    if(adjacencyMatrix.getRowSum()[i] < adjacencyMatrix.getRowSum()[maxIndexI]){
+                        maxIndexI = i;
+                        maxIndexJ = j;
+                    }
+                }
             }
         }
         // start Hamilton with cell(i, j), so first connection is i -> j
@@ -79,9 +85,18 @@ public abstract class Problem {
             int maxIndexNext = 0;
             for(int j = 0; j < n; j++){
                 // must be >= because 0 index might be already visited
-                if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] >= adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext]
+                //szefie czemu >= ???
+                //if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] >= adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext]
+                //        && !visited[j]){
+                if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] > adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext]
                         && !visited[j]){
                     maxIndexNext = j;
+                }
+                else if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] > adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext]
+                        && !visited[j]){
+                    if(adjacencyMatrix.getRowSum()[j]<adjacencyMatrix.getRowSum()[maxIndexNext]){
+                        maxIndexNext = j;
+                    }
                 }
             }
             if(lengthOfSequence + nucleotideLength - adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext] <= maxLengthOfSequence) {
