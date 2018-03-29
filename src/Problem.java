@@ -52,6 +52,7 @@ public abstract class Problem {
         greedyAlgorithm();
     }
 
+
     public void greedyAlgorithm(){
         List<Integer> indexesOfNodes = new ArrayList<>();
         boolean[] visited = new boolean[n];
@@ -83,10 +84,15 @@ public abstract class Problem {
                     maxIndexNext = j;
                 }
             }
-            visited[maxIndexNext] = true;
-            indexesOfNodes.add(maxIndexNext);
-            lengthOfSequence += nucleotideLength - adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext];
-            currentNodeIndex = maxIndexNext;
+            if(lengthOfSequence + nucleotideLength - adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext] <= maxLengthOfSequence) {
+                visited[maxIndexNext] = true;
+                indexesOfNodes.add(maxIndexNext);
+                lengthOfSequence += nucleotideLength - adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext];
+                currentNodeIndex = maxIndexNext;
+            }
+            else{
+                break;
+            }
         }
         System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
                 + "/" + maxLengthOfSequence);
