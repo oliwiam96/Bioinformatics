@@ -13,7 +13,7 @@ public class AdjacencyMatrix {
             for (int j = 0; j < this.n; j++){
                 this.rowSum[i] += this.matrix[i][j];
             }
-            System.out.println(this.getRowSum(i));
+            //System.out.println(this.getRowSum(i));
         }
     }
 
@@ -31,6 +31,9 @@ public class AdjacencyMatrix {
 
     public void setMatrix(int[][] matrix) {
         this.matrix = matrix;
+    }
+    public void setMatrix(int i, int j, int el) {
+        this.matrix[i][j] = el;
     }
 
     public int getRowSum(int i) {

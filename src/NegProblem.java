@@ -20,7 +20,7 @@ public class NegProblem extends Problem {
             in.nextLine();
             for (int i = 0; i < n; i++) {
                 String line = in.nextLine();
-                System.out.println(line);
+                //System.out.println(line);
                 Node node = new Node(line);
                 nodeList.add(node);
             }
