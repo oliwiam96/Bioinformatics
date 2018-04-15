@@ -53,6 +53,7 @@ public abstract class Problem {
     public void markAsVisited(int i, int j, boolean[] visited, AdjacencyMatrix mat){
         visited[i] = true;
         visited[j] = true;
+        // TODO check if i is a correct index in the loop below
         for(int k = 0; k < n; k++) {
             mat.setRowSum(k, mat.getRowSum(k) - mat.getMatrix()[k][i]);
         }
@@ -60,13 +61,14 @@ public abstract class Problem {
 
     //here we use our final method to solve the problem
     public void solveProblem(){
-        //oldGreedyAlgorithm();
+        oldGreedyAlgorithm();
         //greedyAlgorithm();
-        TSP();
+        //TSP();
     }
 
     //method calculates distance in the modified matrix
     public int calculateDistance(int[][] matrix, int n, List<Integer> tab){
+        // TODO check if it is correct
         int distance = matrix[tab.get(tab.size() - 1)][tab.get(0)];
         for (int i = 0; i < tab.size()-1; i++){
             distance += matrix[tab.get(i)][tab.get(i + 1)];
