@@ -94,8 +94,10 @@ public abstract class Problem {
                 break;
             }
         }
+        int optimumNumberOfNucleotides = this.n + this.errorsNumber;
+
         System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
-                + "/" + maxLengthOfSequence);
+                + "/" + optimumNumberOfNucleotides);
         System.out.println("Nodes and weights: ");
         for(int i = 0; i < indexesOfNodes.size() -  1; i++){
             System.out.println(i+1 + ". " + indexesOfNodes.get(i) + ": "
