@@ -61,7 +61,7 @@ public abstract class Problem {
         int maxIndexJ = 0;
         for(int i = 0; i < n; i++){
             for(int j = 0; j < n; j++){
-                if(adjacencyMatrix.getMatrix()[i][j] > adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ]){
+                if(adjacencyMatrix.getMatrix()[i][j] >= adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ]){
                     maxIndexI = i;
                     maxIndexJ = j;
                 }
@@ -72,29 +72,74 @@ public abstract class Problem {
         indexesOfNodes.add(maxIndexJ);
         visited[maxIndexI] = true;
         visited[maxIndexJ] = true;
-        int lengthOfSequence = nucleotideLength + adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ];
+        int lengthOfSequence = 2* nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ];
         int currentNodeIndex = maxIndexJ;
         while(lengthOfSequence < maxLengthOfSequence){
-            // find max from current Node
+            currentNodeIndex = indexesOfNodes.get(indexesOfNodes.size()-1);
+
+            // init first index for comparing
             int maxIndexNext = 0;
+            for(int j =0 ; j < n; j++){
+                if(!visited[j]){
+                    maxIndexNext = j;
+                    break;
+                }
+            }
+            // find max from current Node
             for(int j = 0; j < n; j++){
-                // must be >= because 0 index might be already visited
-                if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] >= adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext]
+                if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] > adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext]
                         && !visited[j]){
                     maxIndexNext = j;
                 }
             }
-            if(lengthOfSequence + nucleotideLength - adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext] <= maxLengthOfSequence) {
-                visited[maxIndexNext] = true;
-                indexesOfNodes.add(maxIndexNext);
-                lengthOfSequence += nucleotideLength - adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext];
-                currentNodeIndex = maxIndexNext;
+
+            // NEW- find max from the start
+            // init first index for comparing
+            int maxIndexNextBeginning = 0;
+            for(int j =0 ; j < n; j++){
+                if(!visited[j]){
+                    maxIndexNextBeginning = j;
+                    break;
+                }
             }
-            else{
+            for(int j = 0; j < n; j++){
+                if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] > adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)]
+                        && !visited[j]){
+                    maxIndexNextBeginning = j;
+                }
+
+            }
+            boolean shouldBreak = false;
+            if(adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext]
+               >= adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)]) {
+
+                if(lengthOfSequence + nucleotideLength - adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext] <= maxLengthOfSequence) {
+                    visited[maxIndexNext] = true;
+                    indexesOfNodes.add(maxIndexNext);
+                    lengthOfSequence += nucleotideLength - adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext];
+                    currentNodeIndex = maxIndexNext;
+                }
+                else {
+                    shouldBreak = true;
+                }
+            } else{
+                System.out.println("Hello " + adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)]);
+                if(lengthOfSequence + nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)] <= maxLengthOfSequence) {
+                    visited[maxIndexNextBeginning] = true;
+                    lengthOfSequence += nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)];
+                    indexesOfNodes.add(0, maxIndexNextBeginning);
+                }
+                else {
+                    shouldBreak = true;
+                }
+            }
+            if(shouldBreak){
                 break;
             }
+
+
         }
-        int optimumNumberOfNucleotides = this.n + this.errorsNumber;
+        int optimumNumberOfNucleotides = this.n;
 
         System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
                 + "/" + optimumNumberOfNucleotides);
