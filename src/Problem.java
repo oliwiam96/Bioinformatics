@@ -4,7 +4,7 @@ import java.util.List;
 public abstract class Problem {
     protected int maxLengthOfSequence;
     protected int nucleotideLength;
-    protected int errorsNumber; // neg errors
+    protected int errorsNumber; // neg/ pos errors
     protected int n; //matrix size (n x n)
     protected AdjacencyMatrix adjacencyMatrix;
     protected List<Node> nodeList = new ArrayList<>();
@@ -141,12 +141,14 @@ public abstract class Problem {
         }
         int optimumNumberOfNucleotides = this.n;
 
-        System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
-                + "/" + optimumNumberOfNucleotides);
+
         System.out.println("Nodes and weights: ");
         for(int i = 0; i < indexesOfNodes.size() -  1; i++){
             System.out.println(i+1 + ". " + indexesOfNodes.get(i) + ": "
                     + adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)]);
         }
+
+        System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
+                + "/" + optimumNumberOfNucleotides);
     }
 }
