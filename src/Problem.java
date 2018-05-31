@@ -97,7 +97,7 @@ public class Problem {
         indexesOfNodes.add(maxIndexJ);
         visited[maxIndexI] = true;
         visited[maxIndexJ] = true;
-        int lengthOfSequence = 2* nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ];
+        int lengthOfSequence = 2 * nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ];
         int currentNodeIndex = maxIndexJ;
         while(lengthOfSequence < maxLengthOfSequence){
             currentNodeIndex = indexesOfNodes.get(indexesOfNodes.size()-1);
@@ -161,8 +161,6 @@ public class Problem {
             if(shouldBreak){
                 break;
             }
-
-
         }
         int optimumNumberOfNucleotides = this.n;
 

@@ -25,7 +25,9 @@ public class Node {
             }
             i++;
         }
-        return from.getNucleotide().length()- maxCommonSubstringLength;
+
+        return from.getNucleotide().length() - maxCommonSubstringLength;
+
     }
 
 }
