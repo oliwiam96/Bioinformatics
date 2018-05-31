@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        /*
+
         for(int i = 0; i < 24; i++){
             String filename = "neg" + i + ".txt";
             Problem negProblem = new Problem(filename);
@@ -15,6 +15,7 @@ public class Main {
             Problem negProblem = new Problem(filename);
             negProblem.solveProblem();
         }
+        /*
         for(int i = 0; i < 12; i++){
             String filename = "pos" + i + ".txt";
             Problem posProblem = new Problem(filename);
@@ -26,11 +27,11 @@ public class Main {
             Problem posProblem = new Problem(filename);
             posProblem.solveProblem();
         }
-        */
+
 
         String filename = "negRepeat0.txt";
         Problem negProblem = new Problem(filename);
         System.out.println(negProblem);
-
+        */
     }
 }

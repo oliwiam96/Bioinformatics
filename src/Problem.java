@@ -82,77 +82,77 @@ public class Problem {
         List<Integer> indexesOfNodes = new ArrayList<>();
         boolean[] visited = new boolean[n];
         // find max elem
-        int maxIndexI = 0;
-        int maxIndexJ = 0;
+        int minIndexI = 0;
+        int minIndexJ = 0;
         for(int i = 0; i < n; i++){
             for(int j = 0; j < n; j++){
-                if(adjacencyMatrix.getMatrix()[i][j] >= adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ]){
-                    maxIndexI = i;
-                    maxIndexJ = j;
+                if(adjacencyMatrix.getMatrix()[i][j] <= adjacencyMatrix.getMatrix()[minIndexI][minIndexJ]){
+                    minIndexI = i;
+                    minIndexJ = j;
                 }
             }
         }
         // start Hamilton with cell(i, j), so first connection is i -> j
-        indexesOfNodes.add(maxIndexI);
-        indexesOfNodes.add(maxIndexJ);
-        visited[maxIndexI] = true;
-        visited[maxIndexJ] = true;
-        int lengthOfSequence = 2 * nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexI][maxIndexJ];
-        int currentNodeIndex = maxIndexJ;
+        indexesOfNodes.add(minIndexI);
+        indexesOfNodes.add(minIndexJ);
+        visited[minIndexI] = true;
+        visited[minIndexJ] = true;
+        int lengthOfSequence = nucleotideLength + adjacencyMatrix.getMatrix()[minIndexI][minIndexJ];
+        int currentNodeIndex = minIndexJ;
         while(lengthOfSequence < maxLengthOfSequence){
             currentNodeIndex = indexesOfNodes.get(indexesOfNodes.size()-1);
 
             // init first index for comparing
-            int maxIndexNext = 0;
+            int minIndexNext = 0;
             for(int j =0 ; j < n; j++){
                 if(!visited[j]){
-                    maxIndexNext = j;
+                    minIndexNext = j;
                     break;
                 }
             }
-            // find max from current Node
+            // find min from current Node
             for(int j = 0; j < n; j++){
-                if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] > adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext]
+                if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] < adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]
                         && !visited[j]){
-                    maxIndexNext = j;
+                    minIndexNext = j;
                 }
             }
 
-            // NEW- find max from the start
+            // NEW- find min from the start
             // init first index for comparing
-            int maxIndexNextBeginning = 0;
+            int minIndexNextBeginning = 0;
             for(int j =0 ; j < n; j++){
                 if(!visited[j]){
-                    maxIndexNextBeginning = j;
+                    minIndexNextBeginning = j;
                     break;
                 }
             }
             for(int j = 0; j < n; j++){
-                if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] > adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)]
+                if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]
                         && !visited[j]){
-                    maxIndexNextBeginning = j;
+                    minIndexNextBeginning = j;
                 }
 
             }
             boolean shouldBreak = false;
-            if(adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext]
-               >= adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)]) {
+            if(adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]
+               <= adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]) {
 
-                if(lengthOfSequence + nucleotideLength - adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext] <= maxLengthOfSequence) {
-                    visited[maxIndexNext] = true;
-                    indexesOfNodes.add(maxIndexNext);
-                    lengthOfSequence += nucleotideLength - adjacencyMatrix.getMatrix()[currentNodeIndex][maxIndexNext];
-                    currentNodeIndex = maxIndexNext;
+                if(lengthOfSequence + adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext] <= maxLengthOfSequence) {
+                    visited[minIndexNext] = true;
+                    indexesOfNodes.add(minIndexNext);
+                    lengthOfSequence += adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext];
+                    currentNodeIndex = minIndexNext;
                 }
                 else {
                     shouldBreak = true;
                 }
             } else{
                 //System.out.println("Hello " + adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)]);
-                if(lengthOfSequence + nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)] <= maxLengthOfSequence) {
-                    visited[maxIndexNextBeginning] = true;
-                    lengthOfSequence += nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)];
-                    indexesOfNodes.add(0, maxIndexNextBeginning);
+                if(lengthOfSequence + adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)] <= maxLengthOfSequence) {
+                    visited[minIndexNextBeginning] = true;
+                    lengthOfSequence += adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)];
+                    indexesOfNodes.add(0, minIndexNextBeginning);
                 }
                 else {
                     shouldBreak = true;
