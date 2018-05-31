@@ -111,6 +111,26 @@ public class Problem {
 
     }
 
+    private int rowSumAfter(int index){
+        int sum = 0;
+        for(int i = 0; i < n; i++) {
+            if (!visited[i] && i != index) {
+                sum += (nucleotideLength - adjacencyMatrix.getMatrix()[index][i])*(nucleotideLength - adjacencyMatrix.getMatrix()[index][i]);
+            }
+        }
+        return sum;
+    }
+
+    private int rowSumBefore(int index){
+        int sum = 0;
+        for(int i = 0; i < n; i++) {
+            if (!visited[i] && i != index) {
+                sum += (nucleotideLength - adjacencyMatrix.getMatrix()[i][index])*(nucleotideLength - adjacencyMatrix.getMatrix()[i][index]);
+            }
+        }
+        return sum;
+    }
+
     public void tryToAddToSeq(){
         int currentNodeIndex;
         while(lengthOfSequence < maxLengthOfSequence){
@@ -129,6 +149,10 @@ public class Problem {
                 if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] < adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]
                         && !visited[j]){
                     minIndexNext = j;
+                } else if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] == adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]){
+                    if(rowSumAfter(j) > rowSumAfter(minIndexNext)){
+                        minIndexNext = j;
+                    }
                 }
             }
 
@@ -145,6 +169,10 @@ public class Problem {
                 if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]
                         && !visited[j]){
                     minIndexNextBeginning = j;
+                } else if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]){
+                    if(rowSumBefore(j) > rowSumBefore(minIndexNextBeginning)){
+                        minIndexNextBeginning = j;
+                    }
                 }
 
             }
@@ -192,7 +220,7 @@ public class Problem {
                     + adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)]);
         }*/
 
-        System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
+        System.out.println(indexesOfNodes.size()
                 + "/" + getOptimum());
     }
 
