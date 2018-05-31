@@ -27,7 +27,7 @@ public class Node {
             }
             i++;
         }
-        return maxCommonSubstringLength;
+        return from.getNucleortide().length() - maxCommonSubstringLength;
     }
 
 }
