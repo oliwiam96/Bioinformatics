@@ -12,6 +12,12 @@ public class Problem {
     protected AdjacencyMatrix adjacencyMatrix;
     protected List<Node> nodeList = new ArrayList<>();
 
+    // variables for algorithm
+    private List<Integer> indexesOfNodes = new ArrayList<>();
+    private boolean[] visited = new boolean[n];
+    private int lengthOfSequence;
+
+
     public Problem(String fileName){
         readInputFromFile(fileName);
     }
@@ -78,9 +84,9 @@ public class Problem {
     }
 
 
-    public void greedyAlgorithm(){
-        List<Integer> indexesOfNodes = new ArrayList<>();
-        boolean[] visited = new boolean[n];
+    public void initGreedy(){
+        indexesOfNodes = new ArrayList<>();
+        visited = new boolean[n];
         // find max elem
         int minIndexI = 0;
         int minIndexJ = 0;
@@ -97,8 +103,12 @@ public class Problem {
         indexesOfNodes.add(minIndexJ);
         visited[minIndexI] = true;
         visited[minIndexJ] = true;
-        int lengthOfSequence = nucleotideLength + adjacencyMatrix.getMatrix()[minIndexI][minIndexJ];
-        int currentNodeIndex = minIndexJ;
+        lengthOfSequence = nucleotideLength + adjacencyMatrix.getMatrix()[minIndexI][minIndexJ];
+
+    }
+
+    public void tryToAddToSeq(){
+        int currentNodeIndex;
         while(lengthOfSequence < maxLengthOfSequence){
             currentNodeIndex = indexesOfNodes.get(indexesOfNodes.size()-1);
 
@@ -136,7 +146,7 @@ public class Problem {
             }
             boolean shouldBreak = false;
             if(adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]
-               <= adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]) {
+                    <= adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]) {
 
                 if(lengthOfSequence + adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext] <= maxLengthOfSequence) {
                     visited[minIndexNext] = true;
@@ -162,8 +172,13 @@ public class Problem {
                 break;
             }
         }
-        int optimumNumberOfNucleotides = this.n;
 
+    }
+
+    public void greedyAlgorithm(){
+        initGreedy();
+        tryToAddToSeq();
+        int optimumNumberOfNucleotides = this.n;
 
         /*System.out.println("Nodes and weights: ");
         for(int i = 0; i < indexesOfNodes.size() -  1; i++){
@@ -173,5 +188,9 @@ public class Problem {
 
         System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
                 + "/" + optimumNumberOfNucleotides);
+    }
+
+    public void swap(){
+
     }
 }
