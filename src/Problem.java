@@ -12,6 +12,8 @@ public class Problem {
     protected AdjacencyMatrix adjacencyMatrix;
     protected List<Node> nodeList = new ArrayList<>();
 
+    private boolean isPositive = false;
+
     // variables for algorithm
     private List<Integer> indexesOfNodes = new ArrayList<>();
     private boolean[] visited = new boolean[n];
@@ -23,6 +25,8 @@ public class Problem {
     }
 
     void readInputFromFile(String fileName) {
+        isPositive = fileName.startsWith("pos");
+
         try {
             Scanner in = new Scanner(new FileReader("examples/" + fileName));
             this.maxLengthOfSequence = in.nextInt();
@@ -179,7 +183,7 @@ public class Problem {
         initGreedy();
         tryToAddToSeq();
         swap();
-        System.out.println("\n\n");
+        //System.out.println("\n\n");
         int optimumNumberOfNucleotides = this.n;
 
         /*System.out.println("Nodes and weights: ");
@@ -189,7 +193,7 @@ public class Problem {
         }*/
 
         System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
-                + "/" + optimumNumberOfNucleotides);
+                + "/" + getOptimum());
     }
 
     /**
@@ -212,8 +216,8 @@ public class Problem {
                 adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx2-1)][indexesOfNodes.get(idx1)] +
                 adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx1)][indexesOfNodes.get(idx2+1)];
 
-        if(currentDistance - newDistance > -10)
-            System.out.println(currentDistance - newDistance);
+        //if(currentDistance - newDistance > -10)
+            //System.out.println(currentDistance - newDistance);
 
         return currentDistance - newDistance;
     }
@@ -221,7 +225,7 @@ public class Problem {
     public void swap(){
         for (int i = 1; i < indexesOfNodes.size()-1; i++) {
             for (int j = i+1; j < indexesOfNodes.size()-1; j++) {
-                if (calcDistDiff(i, j) > -10){
+                if (calcDistDiff(i, j) > 0){
                     System.out.println("Dokonano zamiany");
                     Integer tmp1 = indexesOfNodes.get(i);
                     Integer tmp2 = indexesOfNodes.get(j);
@@ -229,6 +233,13 @@ public class Problem {
                     indexesOfNodes.set(j, tmp1);
                 }
             }
+        }
+    }
+    private int getOptimum(){
+        if(isPositive){
+            return n - errorsNumber;
+        } else{
+            return n;
         }
     }
 }
