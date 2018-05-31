@@ -24,7 +24,7 @@ public class Problem {
             this.errorsNumber = in.nextInt();
             this.n = in.nextInt();
 
-            System.out.println("max: "+ maxLengthOfSequence + " l: " + nucleotideLength + " err: " + errorsNumber + " n: " +n);
+            //System.out.println("max: "+ maxLengthOfSequence + " l: " + nucleotideLength + " err: " + errorsNumber + " n: " +n);
             in.nextLine();
             for (int i = 0; i < n; i++) {
                 String line = in.nextLine();
@@ -148,7 +148,7 @@ public class Problem {
                     shouldBreak = true;
                 }
             } else{
-                System.out.println("Hello " + adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)]);
+                //System.out.println("Hello " + adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)]);
                 if(lengthOfSequence + nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)] <= maxLengthOfSequence) {
                     visited[maxIndexNextBeginning] = true;
                     lengthOfSequence += nucleotideLength - adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)];
@@ -167,11 +167,11 @@ public class Problem {
         int optimumNumberOfNucleotides = this.n;
 
 
-        System.out.println("Nodes and weights: ");
+        /*System.out.println("Nodes and weights: ");
         for(int i = 0; i < indexesOfNodes.size() -  1; i++){
             System.out.println(i+1 + ". " + indexesOfNodes.get(i) + ": "
                     + adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)]);
-        }
+        }*/
 
         System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
                 + "/" + optimumNumberOfNucleotides);
