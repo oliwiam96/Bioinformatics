@@ -178,6 +178,8 @@ public class Problem {
     public void greedyAlgorithm(){
         initGreedy();
         tryToAddToSeq();
+        swap();
+        System.out.println("\n\n");
         int optimumNumberOfNucleotides = this.n;
 
         /*System.out.println("Nodes and weights: ");
@@ -209,11 +211,24 @@ public class Problem {
                 adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx2)][indexesOfNodes.get(idx1+1)] +
                 adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx2-1)][indexesOfNodes.get(idx1)] +
                 adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx1)][indexesOfNodes.get(idx2+1)];
-        
+
+        if(currentDistance - newDistance > -10)
+            System.out.println(currentDistance - newDistance);
+
         return currentDistance - newDistance;
     }
 
     public void swap(){
-
+        for (int i = 1; i < indexesOfNodes.size()-1; i++) {
+            for (int j = i+1; j < indexesOfNodes.size()-1; j++) {
+                if (calcDistDiff(i, j) > -10){
+                    System.out.println("Dokonano zamiany");
+                    Integer tmp1 = indexesOfNodes.get(i);
+                    Integer tmp2 = indexesOfNodes.get(j);
+                    indexesOfNodes.set(i, tmp2);
+                    indexesOfNodes.set(j, tmp1);
+                }
+            }
+        }
     }
 }
