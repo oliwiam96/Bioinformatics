@@ -1,3 +1,5 @@
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -61,9 +63,9 @@ public abstract class Problem {
 
     //here we use our final method to solve the problem
     public void solveProblem(){
-        oldGreedyAlgorithm();
+        //oldGreedyAlgorithm();
         //greedyAlgorithm();
-        //TSP();
+        TSP();
     }
 
     //method calculates distance in the modified matrix
@@ -130,7 +132,7 @@ public abstract class Problem {
             //jezeli jest krocej (moze byc < lub <=) zostawiamy i aktualizujemy bestDistance
             if (currentDistance <= bestDistance){
                 bestDistance = currentDistance;
-                System.out.println("lepiej " + i);
+                //System.out.println("lepiej " + i);
             }
             //w przeciwnym przypadku zamieniamy z powrotem
             else {
@@ -151,18 +153,22 @@ public abstract class Problem {
 
 
         //tera kurde blaszka jedziemy od poczatku i pokazujemy rozwiazanie
+        int numInResult = 0;
         int lengthOfSequence = nucleotideLength;
         //zaczynamy od dlugosci pelnego nukleotydu (10), a liczenie dodatkowych rzeczy zaczynamy od drugiego elementu tablicy
         for (int i = 1; i < indexesOfNodes.size()-1; i++) {
             if(lengthOfSequence +(nucleotideLength - adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i + 1)]) <= maxLengthOfSequence){
                 lengthOfSequence+= (nucleotideLength - adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i + 1)]);
-                System.out.println(i + ". " + indexesOfNodes.get(i) + ": "
-                        + adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)]);
+                //System.out.println(i + ". " + indexesOfNodes.get(i) + ": "
+               //         + adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)]);
+                numInResult++;
             }
             else{
                 break;
             }
         }
+        System.out.println(numInResult + "/" + this.n);
+
     }
 
 
@@ -233,18 +239,18 @@ public abstract class Problem {
 
 
         //rzeczy do wypisywania, tutaj nie sa potrzebne ale nie bede ich psul
-        System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
-                + "/" + maxLengthOfSequence);
-        System.out.println("Nodes and weights: ");
+        //System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
+              //  + "/" + maxLengthOfSequence);
+        //System.out.println("Nodes and weights: ");
         for(int i = 0; i < indexesOfNodes.size() -  1; i++){
-            System.out.println(i+1 + ". " + indexesOfNodes.get(i) + ": "
-                    + adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)]);
+            //System.out.println(i+1 + ". " + indexesOfNodes.get(i) + ": "
+                   // + adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)]);
         }
         String ind = "";
         for (int i = 0; i < indexesOfNodes.size(); i++) {
             ind = ind + indexesOfNodes.get(i) + " ";
         }
-        System.out.println("Greedy: " + ind);
+       // System.out.println("Greedy: " + ind);
 
         return indexesOfNodes;
     }
@@ -301,12 +307,12 @@ public abstract class Problem {
 
         }
 
-        System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
-                + "/" + maxLengthOfSequence);
-        System.out.println("Nodes and weights: ");
+        //System.out.println("Number of nucleotides in a seq: " + indexesOfNodes.size()
+        //        + "/" + maxLengthOfSequence);
+        ///System.out.println("Nodes and weights: ");
         for(int i = 0; i < indexesOfNodes.size() -  1; i++){
-            System.out.println(i+1 + ". " + indexesOfNodes.get(i) + ": "
-                    + adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)]);
+            //System.out.println(i+1 + ". " + indexesOfNodes.get(i) + ": "
+                  //  + adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)]);
         }
     }
 }

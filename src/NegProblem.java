@@ -16,7 +16,7 @@ public class NegProblem extends Problem {
             this.errorsNumber = in.nextInt();
             this.n = in.nextInt();
 
-            System.out.println("max: "+ maxLengthOfSequence + " l: " + nucleotideLength + " err: " + errorsNumber + " n: " +n);
+            //System.out.println("max: "+ maxLengthOfSequence + " l: " + nucleotideLength + " err: " + errorsNumber + " n: " +n);
             in.nextLine();
             for (int i = 0; i < n; i++) {
                 String line = in.nextLine();
