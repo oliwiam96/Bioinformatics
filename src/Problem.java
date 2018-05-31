@@ -190,6 +190,29 @@ public class Problem {
                 + "/" + optimumNumberOfNucleotides);
     }
 
+    /**
+     *
+     * @param idx1
+     * @param idx2
+     * @return difference between distances before and after swap idx1 and idx2;
+     * positive -> better
+     * negative -> worse
+     */
+    public int calcDistDiff(int idx1, int idx2)
+    {
+        int currentDistance = adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx1-1)][indexesOfNodes.get(idx1)] +
+                adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx1)][indexesOfNodes.get(idx1+1)] +
+                adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx2-1)][indexesOfNodes.get(idx2)] +
+                adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx2)][indexesOfNodes.get(idx2+1)];
+
+        int newDistance = adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx1-1)][indexesOfNodes.get(idx2)] +
+                adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx2)][indexesOfNodes.get(idx1+1)] +
+                adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx2-1)][indexesOfNodes.get(idx1)] +
+                adjacencyMatrix.getMatrix()[indexesOfNodes.get(idx1)][indexesOfNodes.get(idx2+1)];
+        
+        return currentDistance - newDistance;
+    }
+
     public void swap(){
 
     }
