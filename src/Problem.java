@@ -84,7 +84,30 @@ public class Problem {
     }
 
     public void solveProblem(){
-        greedyAlgorithm();
+
+        standardAlgorithm();
+        List<Integer> indexesOfNodes1 = new ArrayList<>(indexesOfNodes);
+        rowSumMin();
+        List<Integer> indexesOfNodes2 = new ArrayList<>(indexesOfNodes);
+        rowSumMax();
+        List<Integer> indexesOfNodes3 = new ArrayList<>(indexesOfNodes);
+
+
+        List<Integer> best = indexesOfNodes1;
+
+        if(indexesOfNodes2.size() > best.size()){
+            best = indexesOfNodes2;
+        }
+        if(indexesOfNodes3.size() > best.size()){
+            best = indexesOfNodes3;
+        }
+
+        System.out.println(best.size()+ "/" + getOptimum());
+        //standardAlgorithm2();
+       // List<Integer> indexesOfNodes4 = new ArrayList<>(indexesOfNodes);
+        //System.out.println(indexesOfNodes1.size() + ";"+ indexesOfNodes2.size() + ";" + indexesOfNodes3.size() +";" + indexesOfNodes4.size() + ";" + getOptimum());
+        //System.out.println(indexesOfNodes1.size() + ";"+ indexesOfNodes2.size() + ";" + indexesOfNodes3.size() + ";" + getOptimum());
+
     }
 
 
@@ -111,7 +134,7 @@ public class Problem {
 
     }
 
-    private int rowSumAfter(int index){
+    private int rowSumAfterMax(int index){
         int sum = 0;
         for(int i = 0; i < n; i++) {
             if (!visited[i] && i != index) {
@@ -121,7 +144,7 @@ public class Problem {
         return sum;
     }
 
-    private int rowSumBefore(int index){
+    private int rowSumBeforeMax(int index){
         int sum = 0;
         for(int i = 0; i < n; i++) {
             if (!visited[i] && i != index) {
@@ -131,7 +154,27 @@ public class Problem {
         return sum;
     }
 
-    public void tryToAddToSeq(){
+    private int rowSumAfterMin(int index){
+        int sum = 0;
+        for(int i = 0; i < n; i++) {
+            if (!visited[i] && i != index) {
+                sum += adjacencyMatrix.getMatrix()[index][i]*adjacencyMatrix.getMatrix()[index][i];
+            }
+        }
+        return sum;
+    }
+
+    private int rowSumBeforeMin(int index){
+        int sum = 0;
+        for(int i = 0; i < n; i++) {
+            if (!visited[i] && i != index) {
+                sum += adjacencyMatrix.getMatrix()[i][index]*nucleotideLength - adjacencyMatrix.getMatrix()[i][index];
+            }
+        }
+        return sum;
+    }
+
+    public void tryToAddToSeqMax(){
         int currentNodeIndex;
         while(lengthOfSequence < maxLengthOfSequence){
             currentNodeIndex = indexesOfNodes.get(indexesOfNodes.size()-1);
@@ -150,7 +193,7 @@ public class Problem {
                         && !visited[j]){
                     minIndexNext = j;
                 } else if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] == adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]){
-                    if(rowSumAfter(j) > rowSumAfter(minIndexNext)){
+                    if(rowSumAfterMax(j) > rowSumAfterMax(minIndexNext)){
                         minIndexNext = j;
                     }
                 }
@@ -170,7 +213,7 @@ public class Problem {
                         && !visited[j]){
                     minIndexNextBeginning = j;
                 } else if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]){
-                    if(rowSumBefore(j) > rowSumBefore(minIndexNextBeginning)){
+                    if(rowSumBeforeMax(j) > rowSumBeforeMax(minIndexNextBeginning)){
                         minIndexNextBeginning = j;
                     }
                 }
@@ -184,13 +227,11 @@ public class Problem {
                     visited[minIndexNext] = true;
                     indexesOfNodes.add(minIndexNext);
                     lengthOfSequence += adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext];
-                    currentNodeIndex = minIndexNext;
                 }
                 else {
                     shouldBreak = true;
                 }
             } else{
-                //System.out.println("Hello " + adjacencyMatrix.getMatrix()[maxIndexNextBeginning][indexesOfNodes.get(0)]);
                 if(lengthOfSequence + adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)] <= maxLengthOfSequence) {
                     visited[minIndexNextBeginning] = true;
                     lengthOfSequence += adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)];
@@ -207,9 +248,215 @@ public class Problem {
 
     }
 
-    public void greedyAlgorithm(){
+    public void tryToAddToSeqMin(){
+        int currentNodeIndex;
+        while(lengthOfSequence < maxLengthOfSequence){
+            currentNodeIndex = indexesOfNodes.get(indexesOfNodes.size()-1);
+
+            // init first index for comparing
+            int minIndexNext = 0;
+            for(int j =0 ; j < n; j++){
+                if(!visited[j]){
+                    minIndexNext = j;
+                    break;
+                }
+            }
+            // find min from current Node
+            for(int j = 0; j < n; j++){
+                if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] < adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]
+                        && !visited[j]){
+                    minIndexNext = j;
+                } else if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] == adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]){
+                    if(rowSumAfterMin(j) < rowSumAfterMin(minIndexNext)){
+                        minIndexNext = j;
+                    }
+                }
+            }
+
+            // NEW- find min from the start
+            // init first index for comparing
+            int minIndexNextBeginning = 0;
+            for(int j =0 ; j < n; j++){
+                if(!visited[j]){
+                    minIndexNextBeginning = j;
+                    break;
+                }
+            }
+            for(int j = 0; j < n; j++){
+                if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]
+                        && !visited[j]){
+                    minIndexNextBeginning = j;
+                } else if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]){
+                    if(rowSumBeforeMin(j) < rowSumBeforeMin(minIndexNextBeginning)){
+                        minIndexNextBeginning = j;
+                    }
+                }
+
+            }
+            boolean shouldBreak = false;
+            if(adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]
+                    <= adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]) {
+
+                if(lengthOfSequence + adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext] <= maxLengthOfSequence) {
+                    visited[minIndexNext] = true;
+                    indexesOfNodes.add(minIndexNext);
+                    lengthOfSequence += adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext];
+                }
+                else {
+                    shouldBreak = true;
+                }
+            } else{
+                if(lengthOfSequence + adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)] <= maxLengthOfSequence) {
+                    visited[minIndexNextBeginning] = true;
+                    lengthOfSequence += adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)];
+                    indexesOfNodes.add(0, minIndexNextBeginning);
+                }
+                else {
+                    shouldBreak = true;
+                }
+            }
+            if(shouldBreak){
+                break;
+            }
+        }
+
+    }
+
+    public void tryToAddToSeqStandard(){
+        int currentNodeIndex;
+        while(lengthOfSequence < maxLengthOfSequence){
+            currentNodeIndex = indexesOfNodes.get(indexesOfNodes.size()-1);
+
+            // init first index for comparing
+            int minIndexNext = 0;
+            for(int j =0 ; j < n; j++){
+                if(!visited[j]){
+                    minIndexNext = j;
+                    break;
+                }
+            }
+            // find min from current Node
+            for(int j = 0; j < n; j++){
+                if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] < adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]
+                        && !visited[j]){
+                    minIndexNext = j;
+                }
+            }
+
+            // NEW- find min from the start
+            // init first index for comparing
+            int minIndexNextBeginning = 0;
+            for(int j =0 ; j < n; j++){
+                if(!visited[j]){
+                    minIndexNextBeginning = j;
+                    break;
+                }
+            }
+            for(int j = 0; j < n; j++){
+                if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]
+                        && !visited[j]){
+                    minIndexNextBeginning = j;
+                }
+
+            }
+            boolean shouldBreak = false;
+            if(adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]
+                    <= adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]) {
+
+                if(lengthOfSequence + adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext] <= maxLengthOfSequence) {
+                    visited[minIndexNext] = true;
+                    indexesOfNodes.add(minIndexNext);
+                    lengthOfSequence += adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext];
+                }
+                else {
+                    shouldBreak = true;
+                }
+            } else{
+                if(lengthOfSequence + adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)] <= maxLengthOfSequence) {
+                    visited[minIndexNextBeginning] = true;
+                    lengthOfSequence += adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)];
+                    indexesOfNodes.add(0, minIndexNextBeginning);
+                }
+                else {
+                    shouldBreak = true;
+                }
+            }
+            if(shouldBreak){
+                break;
+            }
+        }
+
+    }
+
+    public void tryToAddToSeqStandard2(){
+        int currentNodeIndex;
+        while(lengthOfSequence < maxLengthOfSequence){
+            currentNodeIndex = indexesOfNodes.get(indexesOfNodes.size()-1);
+
+            // init first index for comparing
+            int minIndexNext = 0;
+            for(int j =0 ; j < n; j++){
+                if(!visited[j]){
+                    minIndexNext = j;
+                    break;
+                }
+            }
+            // find min from current Node
+            for(int j = 0; j < n; j++){
+                if(adjacencyMatrix.getMatrix()[currentNodeIndex][j] <= adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]
+                        && !visited[j]){
+                    minIndexNext = j;
+                }
+            }
+
+            // NEW- find min from the start
+            // init first index for comparing
+            int minIndexNextBeginning = 0;
+            for(int j =0 ; j < n; j++){
+                if(!visited[j]){
+                    minIndexNextBeginning = j;
+                    break;
+                }
+            }
+            for(int j = 0; j < n; j++){
+                if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] <= adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]
+                        && !visited[j]){
+                    minIndexNextBeginning = j;
+                }
+
+            }
+            boolean shouldBreak = false;
+            if(adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext]
+                    <= adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]) {
+
+                if(lengthOfSequence + adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext] <= maxLengthOfSequence) {
+                    visited[minIndexNext] = true;
+                    indexesOfNodes.add(minIndexNext);
+                    lengthOfSequence += adjacencyMatrix.getMatrix()[currentNodeIndex][minIndexNext];
+                }
+                else {
+                    shouldBreak = true;
+                }
+            } else{
+                if(lengthOfSequence + adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)] <= maxLengthOfSequence) {
+                    visited[minIndexNextBeginning] = true;
+                    lengthOfSequence += adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)];
+                    indexesOfNodes.add(0, minIndexNextBeginning);
+                }
+                else {
+                    shouldBreak = true;
+                }
+            }
+            if(shouldBreak){
+                break;
+            }
+        }
+
+    }
+
+    public void rowSumMax(){
         initGreedy();
-        tryToAddToSeq();
+        tryToAddToSeqMax();
         swap();
         //System.out.println("\n\n");
         int optimumNumberOfNucleotides = this.n;
@@ -220,9 +467,24 @@ public class Problem {
                     + adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)]);
         }*/
 
-        System.out.println(indexesOfNodes.size()
-                + "/" + getOptimum());
+        //System.out.println(indexesOfNodes.size() + "/" + getOptimum());
     }
+    private void rowSumMin(){
+        initGreedy();
+        tryToAddToSeqMin();
+    }
+
+
+    private void standardAlgorithm(){
+        initGreedy();
+        tryToAddToSeqStandard();
+    }
+
+    private void standardAlgorithm2(){
+        initGreedy();
+        tryToAddToSeqStandard2();
+    }
+
 
     /**
      *
