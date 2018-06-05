@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
 
 
-        for(int i = 0; i < 24; i++){
+        /*for(int i = 0; i < 24; i++){
             String filename = "neg" + i + ".txt";
             Problem negProblem = new Problem(filename);
             negProblem.solveProblem();
@@ -26,16 +26,16 @@ public class Main {
             String filename = "posend" + i + ".txt";
             Problem posProblem = new Problem(filename);
             posProblem.solveProblem();
-        }
+        }*/
 
 
-        /*ProblemGenerator pg = new ProblemGenerator();
-        pg.generateProblem("asd", 10, 200, 30, 30);*/
+        ProblemGenerator pg = new ProblemGenerator();
+        pg.generateProblem("our0.txt", 10, 200, 40, 40);
 
         /*
         String filename = "negRepeat0.txt";
         Problem negProblem = new Problem(filename);
         System.out.println(negProblem);
-        */
+     */
     }
 }

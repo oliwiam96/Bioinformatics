@@ -18,6 +18,8 @@ public class Problem {
     protected List<Node> nodeList = new ArrayList<>();
 
     private boolean isPositive = false;
+    private boolean isOurProblem = false;
+
 
     // variables for algorithm
     private List<Integer> indexesOfNodes = new ArrayList<>();
@@ -31,6 +33,7 @@ public class Problem {
 
     void readInputFromFile(String fileName) {
         isPositive = fileName.startsWith("pos");
+        isOurProblem = fileName.startsWith("our");
 
         try {
             Scanner in = new Scanner(new FileReader("examples/" + fileName));
@@ -643,7 +646,10 @@ public class Problem {
     private int getOptimum(){
         if(isPositive){
             return n - errorsNumber;
-        } else{
+        } else if(isOurProblem){
+            return errorsNumber;
+        }
+        else{
             return n;
         }
     }

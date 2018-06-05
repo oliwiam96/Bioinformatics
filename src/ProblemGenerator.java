@@ -1,5 +1,6 @@
 import com.sun.org.apache.xpath.internal.SourceTree;
 
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +46,20 @@ public class ProblemGenerator {
             System.out.println(strList.get(i));
         }
         Collections.shuffle(strList);
-        System.out.println(problemStr);
+
+        try {
+
+            PrintWriter writer = new PrintWriter(filename, "UTF-8");
+            writer.println((n+ nucleotideLength - 1) + " " + nucleotideLength + " " + n + " " + (n - negNum + posNum));
+            for(String str: strList){
+                writer.println(str);
+            }
+            writer.close();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        //System.out.println(problemStr);
 
 
     }
