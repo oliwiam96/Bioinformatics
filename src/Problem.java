@@ -3,6 +3,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TransferQueue;
+
+import static java.lang.Integer.bitCount;
+import static java.lang.Integer.max;
+import static java.lang.Integer.min;
 
 public class Problem {
     protected int maxLengthOfSequence;
@@ -85,28 +90,59 @@ public class Problem {
 
     public void solveProblem(){
 
+        int before = 0;
+        int after = 0;
+
         standardAlgorithm();
         List<Integer> indexesOfNodes1 = new ArrayList<>(indexesOfNodes);
+
         rowSumMin();
         List<Integer> indexesOfNodes2 = new ArrayList<>(indexesOfNodes);
+
         rowSumMax();
         List<Integer> indexesOfNodes3 = new ArrayList<>(indexesOfNodes);
 
 
-        List<Integer> best = indexesOfNodes1;
+        List<Integer> best;
+        if(indexesOfNodes1.size() >= indexesOfNodes2.size() && indexesOfNodes1.size() >= indexesOfNodes3.size()){
+            // 1 is best
+            best = indexesOfNodes1;
+            /*standardAlgorithm();
+            before = indexesOfNodes.size();
+            swapSubSeq();
+            //tryToAddToSeqStandard();
+            after = indexesOfNodes.size();
+            isSolutionCorrect();*/
 
-        if(indexesOfNodes2.size() > best.size()){
+        } else if(indexesOfNodes2.size() >= indexesOfNodes1.size() && indexesOfNodes2.size() >= indexesOfNodes3.size()){
+            // 2 is best
             best = indexesOfNodes2;
-        }
-        if(indexesOfNodes3.size() > best.size()){
+            /*rowSumMin();
+            before = indexesOfNodes.size();
+            swapSubSeq();
+            //tryToAddToSeqMin();
+            after = indexesOfNodes.size();
+            isSolutionCorrect();*/
+        } else{
+            // 3 is best
             best = indexesOfNodes3;
-        }
+            /*rowSumMax();
+            before = indexesOfNodes.size();
+            swapSubSeq();
+            //tryToAddToSeqMax();
+            after = indexesOfNodes.size();
+            isSolutionCorrect();*/
 
-        System.out.println(best.size()+ "/" + getOptimum());
+        }
+        /*if(after > before){
+            System.out.println("sucess! before: " + before + "after: " + after);
+        }*/
+
+        //System.out.println(best.size()+ "/" + getOptimum() + "better: " + indexesOfNodes.size());
         //standardAlgorithm2();
        // List<Integer> indexesOfNodes4 = new ArrayList<>(indexesOfNodes);
         //System.out.println(indexesOfNodes1.size() + ";"+ indexesOfNodes2.size() + ";" + indexesOfNodes3.size() +";" + indexesOfNodes4.size() + ";" + getOptimum());
-        //System.out.println(indexesOfNodes1.size() + ";"+ indexesOfNodes2.size() + ";" + indexesOfNodes3.size() + ";" + getOptimum());
+       System.out.println(indexesOfNodes1.size() + ";"+ indexesOfNodes2.size() + ";" + indexesOfNodes3.size() + ";" + getOptimum());
 
     }
 
@@ -212,7 +248,7 @@ public class Problem {
                 if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]
                         && !visited[j]){
                     minIndexNextBeginning = j;
-                } else if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]){
+                } else if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] == adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]){
                     if(rowSumBeforeMax(j) > rowSumBeforeMax(minIndexNextBeginning)){
                         minIndexNextBeginning = j;
                     }
@@ -286,7 +322,7 @@ public class Problem {
                 if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]
                         && !visited[j]){
                     minIndexNextBeginning = j;
-                } else if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] < adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]){
+                } else if(adjacencyMatrix.getMatrix()[j][indexesOfNodes.get(0)] == adjacencyMatrix.getMatrix()[minIndexNextBeginning][indexesOfNodes.get(0)]){
                     if(rowSumBeforeMin(j) < rowSumBeforeMin(minIndexNextBeginning)){
                         minIndexNextBeginning = j;
                     }
@@ -525,11 +561,102 @@ public class Problem {
             }
         }
     }
+
+    private void swapSubSeq(){
+        int maxIndex1 = 0; // we don't like big weights (0,1)
+        int maxIndex2 = 1; // (1,2)
+        for(int i = 1; i <indexesOfNodes.size() - 2; i++){
+            if(adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)] >=
+                    adjacencyMatrix.getMatrix()[indexesOfNodes.get(maxIndex1)][indexesOfNodes.get(maxIndex1+1)]){
+                maxIndex1 = i;
+            }
+        }
+        for(int i = 1; i <indexesOfNodes.size() - 2; i++){
+            if(i != maxIndex1) {
+                if (adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i + 1)] >=
+                        adjacencyMatrix.getMatrix()[indexesOfNodes.get(maxIndex2)][indexesOfNodes.get(maxIndex2 + 1)]) {
+                    maxIndex2 = i;
+                }
+            }
+        }
+        int first = min(maxIndex1, maxIndex2);
+        int second = max(maxIndex1, maxIndex2);
+        int initCost = adjacencyMatrix.getMatrix()[indexesOfNodes.get(first)][indexesOfNodes.get(first+1)]
+                     + adjacencyMatrix.getMatrix()[indexesOfNodes.get(second)][indexesOfNodes.get(second + 1)];
+        //System.out.println("init cost: " + initCost);
+        if(second - first > 1){
+            int myFavIndex = -1;
+            int myFavInsertCost = 1000;
+            int linkCost = adjacencyMatrix.getMatrix()[indexesOfNodes.get(first)][indexesOfNodes.get(second)];
+            //System.out.println("Link cost: " + linkCost);
+            for(int i = 0; i < first - 1; i++){
+                int insertCost = adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(first)]
+                        + adjacencyMatrix.getMatrix()[indexesOfNodes.get(second)][indexesOfNodes.get(i+1)]
+                        - adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)];
+                if(insertCost + linkCost < initCost){
+                    System.out.println("HURRRAY!!!" + (initCost - insertCost + linkCost));
+                    if(insertCost < myFavInsertCost){
+                        myFavIndex = i;
+                        myFavInsertCost = insertCost;
+                    }
+                }
+            }
+
+            for(int i = second+1; i < indexesOfNodes.size() - 1; i++){
+                int insertCost = adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(first)]
+                        + adjacencyMatrix.getMatrix()[indexesOfNodes.get(second)][indexesOfNodes.get(i+1)]
+                        - adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)];
+                if(insertCost + linkCost < initCost){
+                    System.out.println("HURRRAY!!!" + (initCost - insertCost + linkCost));
+                    if(insertCost < myFavInsertCost){
+                        myFavIndex = i;
+                        myFavInsertCost = insertCost;
+                    }
+                }
+            }
+
+            if(myFavIndex > -1){
+                // paste subsequence from (first, second) between (myFavIndex, myFavIndex+1)
+                List<Integer> firstSeq = new ArrayList<>(indexesOfNodes.subList(0, first));
+                List<Integer> subSeq = new ArrayList<>(indexesOfNodes.subList(first, second));
+                List<Integer> secondSeq = new ArrayList<>(indexesOfNodes.subList(second, indexesOfNodes.size()));
+
+                firstSeq.addAll(secondSeq);
+                //firstSeq = new ArrayList<>(firstSeq);
+                //List<Integer> subSeq = new ArrayList<>(subSeq);
+
+                if(myFavIndex < first){
+                    firstSeq.addAll(myFavIndex, subSeq);
+                } else{
+                    // myFavIndex > second
+                    firstSeq.addAll(myFavIndex - subSeq.size(), subSeq);
+                }
+                System.out.println(firstSeq.size() + " " + indexesOfNodes.size());
+                System.out.println("first: "+ first + "second: "+ second + "favInd: "+ myFavIndex);
+                indexesOfNodes = firstSeq;
+                //System.out.println("here");
+            }
+        }
+
+
+    }
     private int getOptimum(){
         if(isPositive){
             return n - errorsNumber;
         } else{
             return n;
         }
+    }
+
+    private boolean isSolutionCorrect(){
+        int myLength = nucleotideLength;
+        for(int i = 0; i < indexesOfNodes.size() - 1; i++){
+            myLength += adjacencyMatrix.getMatrix()[indexesOfNodes.get(i)][indexesOfNodes.get(i+1)];
+        }
+        //System.out.println("Length: "+  myLength + "/" + maxLengthOfSequence);
+        if(myLength > maxLengthOfSequence){
+            System.out.println("ERROR!!!");
+        }
+        return myLength <= maxLengthOfSequence;
     }
 }
